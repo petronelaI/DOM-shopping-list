@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+	<head>
+
+		<style>
+
+			body{
+				background-color: #ebccff;
+			}
+
+			h1 {
+				margin: 0 0 60px 0;
+				font-size: 28px;
+			}
+
+			.mark{
+				background-color:#ff9999;
+				border-radius: 3px;
+				font-size: 14px;
+			}
+
+			.formular{
+				background-color: white;
+				border-radius: 10px;
+				width: 600px;
+				margin: 10px;
+				padding: 20px;
+				margin-left: auto; 
+				margin-right: auto;
+				font-size: 20px;
+			}
+
+			.casuta_nume {
+				width: 250px;
+				height: 30px;
+			}
+
+			#sort{
+				background-color: #e6b3e6;
+				border-radius: 3px;
+				font-size: 14px;
+			}
+
+			#add_item{
+				background-color: #57f298;
+				border-radius: 3px;
+				font-size: 14px;
+				padding: 10px;
+				
+			}
+
+			.striketrough {
+				text-decoration: line-through;
+			}
+
+			#table_hidden {
+				display: none;
+			}
+
+			#table_hidden.visible {
+				display: block;
+			}
+
+		</style>
+
+		<script>
+			var lista=[];
+			var indexEditare = -1;
+			console.log(lista);
+			
+			function deseneazaTabel(){
+				var str = "";
+				if(lista.length!==0){
+						document.getElementById("table_hidden").classList.add("visible");
+					}
+
+				for(var i=0;i<lista.length;i++){
+					var m ="";
+					if (lista[i].marcat === true){ //marcat=numele proprietatii
+						m = "striketrough";
+					}
+					str += `<tr class="${m}">
+								<td>${lista[i].nume}</td>
+								<td>
+									<button class="mark" onclick="mark(${i});">Mark as buyed</button>
+								</td>
+							</tr>`;
+				}
+				document.querySelector("table tbody").innerHTML=str;
+			}
+			
+			function adauga(t,event){
+				event.preventDefault();
+				var obiecte = {
+					marcat:false //punem proprietatea ca implicit nu sunt marcate
+				};
+				var inputs = t.querySelectorAll("input[name]");
+				for(var i=0;i<inputs.length;i++){
+					var a = inputs[i].getAttribute("name");
+					var v = inputs[i].value;
+					obiecte[a] = v;
+				}
+					lista.push(obiecte);
+				deseneazaTabel();
+				t.reset();
+			}
+
+			function sortare(coloana){
+				lista.sort(function (a,b){
+					if(a[coloana]>b[coloana]){
+						return 1;
+					}
+					if(a[coloana]<b[coloana]){
+						return -1;
+					}
+					return 0;
+				});
+				deseneazaTabel();
+			}
+			
+			function sortare2(coloana){
+				lista.sort(function (a,b){
+					if(a[coloana]<b[coloana]){
+						return 1;
+					}
+					if(a[coloana]>b[coloana]){
+						return -1;
+					}
+					return 0;
+				});
+				deseneazaTabel();
+			}
+			
+			 function mark(idx) {
+			 	if(lista[idx].marcat===true){
+				 	lista[idx].marcat=false;//pentru a demarca un element din lista
+				 	}else{
+				 		lista[idx].marcat=true; //marchez elementul pe care apas 
+				 	}
+					deseneazaTabel();	
+			}
+			
+		</script>
+	</head>
+	<body>
+		<div class="formular">
+			<h1>SHOPPING LIST</h1>
+			<form id="formAdaugare" onsubmit="adauga(this,event)">
+					<input class="casuta_nume" name="nume" type="text"/>
+					<input id="add_item" type="submit" value="Add item"/>
+			</form><br>
+
+			<button id="sort" onclick="sortare('nume');">Sort asc.</button>
+			<button id="sort" onclick="sortare2('nume');">Sort desc.</button><br>
+
+			<table id="table_hidden">
+					<thead>
+						<tr>
+							<td><b>Item description &nbsp; &nbsp; &nbsp; &nbsp;</b></td><br>
+							<td><b>Action</b></td>
+							<td></td>
+						</tr>
+					</thead>
+					<tbody id="marcat"></tbody>
+			</table>
+		</div>
+	</body>
+</html>
